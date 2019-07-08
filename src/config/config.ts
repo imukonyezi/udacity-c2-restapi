@@ -9,8 +9,7 @@ export const config = {
       aws_reigion: process.env.UG_AWS_REGION,
       aws_profile: process.env.UG_AWS_PROFILE,
       aws_media_bucket: process.env.UG_AWS_MEDIA_BUCKET
-    },
-    url_expires: 60 * 5
+    }
   },
   prod: {
     username: process.env.POSTGRESS_USERNAME,
@@ -22,7 +21,7 @@ export const config = {
       aws_reigion: process.env.AWS_REGION,
       aws_profile: process.env.AWS_PROFILE,
       aws_media_bucket: process.env.AWS_MEDIA_BUCKET
-    },
-    url_expires: 60 * 5
-  }
+    }
+  },
+  url_expires: 60 * 5
 };

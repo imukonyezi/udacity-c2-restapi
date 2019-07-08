@@ -1,22 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = {
-    "dev": {
-        "username": "udagramruttnerdev",
-        "password": "udagramruttnerdev",
-        "database": "udagramruttnerdev",
-        "host": "udagramruttnerdev.c79fzt27bzf6.us-east-2.rds.amazonaws.com",
-        "dialect": "postgres",
-        "aws_reigion": "us-east-2",
-        "aws_profile": "default",
-        "aws_media_bucket": "udagram-ruttner-dev"
+    dev: {
+        username: process.env.UG_POSTGRESS_USERNAME,
+        password: process.env.UG_POSTGRESS_PASSWORD,
+        database: process.env.UG_POSTGRESS_DATABASE,
+        host: process.env.UG_POSTGRESS_HOST,
+        dialect: 'postgres',
+        aws: {
+            aws_reigion: process.env.UG_AWS_REGION,
+            aws_profile: process.env.UG_AWS_PROFILE,
+            aws_media_bucket: process.env.UG_AWS_MEDIA_BUCKET
+        }
     },
-    "prod": {
-        "username": "",
-        "password": "",
-        "database": "udagram_prod",
-        "host": "",
-        "dialect": "postgres"
-    }
+    prod: {
+        username: process.env.POSTGRESS_USERNAME,
+        password: process.env.POSTGRESS_PASSWORD,
+        database: process.env.POSTGRESS_DATABASE,
+        host: process.env.POSTGRESS_HOST,
+        dialect: 'postgres',
+        aws: {
+            aws_reigion: process.env.AWS_REGION,
+            aws_profile: process.env.AWS_PROFILE,
+            aws_media_bucket: process.env.AWS_MEDIA_BUCKET
+        }
+    },
+    url_expires: 60 * 5
 };
 //# sourceMappingURL=config.js.map

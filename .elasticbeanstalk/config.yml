@@ -1,6 +1,6 @@
 branch-defaults:
   dev:
-    environment: null
+    environment: udagram-krasserp-dev-dev
     group_suffix: null
 deploy:
   artifact: ./www/Archive.zip

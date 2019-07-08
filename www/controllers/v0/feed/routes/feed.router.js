@@ -19,11 +19,13 @@ const express_1 = require("express");
 const FeedItem_1 = require("../models/FeedItem");
 const auth_router_1 = require("../../users/routes/auth.router");
 const AWS = __importStar(require("../../../../aws"));
+const commons_1 = require("../../../../helpers/commons");
+const HttpStatus = require('http-status-codes');
 const router = express_1.Router();
 // Get all feed items
 router.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
     const items = yield FeedItem_1.FeedItem.findAndCountAll({ order: [['id', 'DESC']] });
-    items.rows.map((item) => {
+    items.rows.map(item => {
         if (item.url) {
             item.url = AWS.getGetSignedUrl(item.url);
         }
@@ -32,14 +34,35 @@ router.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
 }));
 // Get a specific resource
 router.get('/:id', (req, res) => __awaiter(this, void 0, void 0, function* () {
-    let { id } = req.params;
+    const { id } = req.params;
     const item = yield FeedItem_1.FeedItem.findByPk(id);
     res.send(item);
 }));
 // update a specific resource
 router.patch('/:id', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
-    //@TODO try it yourself
-    res.send(500).send("not implemented");
+    const { id } = req.params;
+    const { caption, url } = req.body;
+    const updateOptions = { caption, url };
+    const updateKeys = Object.keys(updateOptions);
+    const updateObj = {};
+    updateKeys.forEach(k => {
+        if (updateOptions[k]) {
+            updateObj[k] = updateOptions[k];
+        }
+    });
+    if (commons_1.isEmpty(updateObj)) {
+        res
+            .status(HttpStatus.BAD_REQUEST)
+            .json({ erro: 'no caption and no url provided' });
+    }
+    else {
+        const item = yield FeedItem_1.FeedItem.update(updateObj, {
+            where: { id },
+            returning: true
+        });
+        res.status(HttpStatus.OK).json(item);
+    }
+    //res.send(HttpStatus.INTERNAL_SERVER_ERROR).send('not implemented');
 }));
 // Get a signed url to put a new item in the bucket
 router.get('/signed-url/:fileName', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -47,7 +70,7 @@ router.get('/signed-url/:fileName', auth_router_1.requireAuth, (req, res) => __a
     const url = AWS.getPutSignedUrl(fileName);
     res.status(201).send({ url: url });
 }));
-// Post meta data and the filename after a file is uploaded 
+// Post meta data and the filename after a file is uploaded
 // NOTE the file name is they key name in the s3 bucket.
 // body : {caption: string, fileName: string};
 router.post('/', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -55,7 +78,9 @@ router.post('/', auth_router_1.requireAuth, (req, res) => __awaiter(this, void 0
     const fileName = req.body.url;
     // check Caption is valid
     if (!caption) {
-        return res.status(400).send({ message: 'Caption is required or malformed' });
+        return res
+            .status(400)
+            .send({ message: 'Caption is required or malformed' });
     }
     // check Filename is valid
     if (!fileName) {

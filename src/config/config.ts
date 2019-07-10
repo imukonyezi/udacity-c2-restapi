@@ -23,5 +23,8 @@ export const config = {
       aws_media_bucket: process.env.AWS_MEDIA_BUCKET
     }
   },
-  url_expires: 60 * 5
+  url_expires: 60 * 5,
+  jwt: {
+    secret: process.env.UG_JWT_SECRET
+  }
 };

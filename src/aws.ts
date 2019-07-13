@@ -1,7 +1,7 @@
 import AWS = require('aws-sdk');
 import { config } from './config/config';
 
-const c = config.dev.aws;
+const c = config.aws;
 const { url_expires } = config;
 
 //Configure AWS
